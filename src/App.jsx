@@ -1,6 +1,4 @@
 import React from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import MainPage from "./pages/MainPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -12,7 +10,6 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import PrintIcon from "@mui/icons-material/Print";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import "react-quill/dist/quill.snow.css";
-import "@react-pdf-viewer/core/lib/styles/index.css";
 
 function App() {
   const [value, setValue] = React.useState(0);

@@ -3,7 +3,6 @@ import { PDFDownloadLink, PDFViewer, BlobProvider } from "@react-pdf/renderer";
 import { useLocation } from "react-router-dom";
 import Document from "../components/Document";
 import { Button } from "@mui/material";
-import { Iron } from "@mui/icons-material";
 const DocumentPage = () => {
   const location = useLocation();
   const onDownload = (url) => {
