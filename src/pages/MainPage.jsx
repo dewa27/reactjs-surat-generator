@@ -8,10 +8,23 @@ import {
   Button,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { RichTextField } from "mui-quill";
 import { useNavigate } from "react-router-dom";
-
+import ReactQuill from "react-quill";
 import DocumentPage from "./DocumentPage";
+const toolbarQuill = {
+  toolbar: [
+    // [{ header: [1, 2, false] }],
+    ["bold", "italic", "underline", "strike"],
+    // [
+    //   { list: "ordered" },
+    //   { list: "bullet" },
+    //   { indent: "-1" },
+    //   { indent: "+1" },
+    // ],
+    // ["link", "image"],
+    // ["clean"],
+  ],
+};
 const MainPage = () => {
   const navigate = useNavigate();
   const [nomor, setNomor] = React.useState("");
@@ -27,6 +40,10 @@ const MainPage = () => {
     navigate("/cetak-surat", {
       state: { nomor, yth, hal, tanggal, dari, isi, namaTtd, nipTtd },
     });
+  };
+
+  const onChangeQuill = (value, delta, source, editor) => {
+    setIsi(value);
   };
   return (
     <Grid container columnSpacing={2} rowSpacing={2}>
@@ -122,20 +139,10 @@ const MainPage = () => {
         />
       </Grid>
       <Grid item xs={12}>
-        <RichTextField
-          value={isi}
-          onChange={(nextValue) => {
-            setIsi(nextValue);
-          }}
-          variant="outlined"
-          formats={["indent"]}
-          options={{
-            toolbar: true,
-          }}
-          style={{ width: "100%" }}
-          size="small"
-          placeholder="Isi surat"
-          theme="snow"
+        <ReactQuill
+          placeholder="Isi Surat"
+          modules={toolbarQuill}
+          onChange={onChangeQuill}
         />
       </Grid>
       <Grid item xs={12}>
