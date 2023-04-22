@@ -13,6 +13,7 @@ export const HistoryPage = () => {
       const responseData = await response.data;
       setDocuments(() => responseData.data);
     };
+    document.title = "History Surat";
     fetchData();
   }, []);
 

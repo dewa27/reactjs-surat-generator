@@ -11,8 +11,8 @@ const DocumentPage = () => {
       const responseData = await response.data;
       setDocumentData(() => responseData.data);
     };
+    document.title = "Detail Surat";
     fetchDocument();
-    console.log(documentData);
   }, []);
 
   const onDownload = () => {

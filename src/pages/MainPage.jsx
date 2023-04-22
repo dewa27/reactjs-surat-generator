@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import {
   Container,
   Grid,
@@ -42,6 +42,10 @@ const MainPage = () => {
   const nipTtdRef = useRef();
   const [isi, setIsi] = React.useState("");
   const [tembusan, setTembusan] = React.useState("");
+
+  useEffect(() => {
+    document.title = "Cetak Surat";
+  }, []);
 
   const generatePdfDocument = async (data) => {
     const file = new File(
