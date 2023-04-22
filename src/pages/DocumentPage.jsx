@@ -1,45 +1,47 @@
-import React from "react";
-import { PDFDownloadLink, PDFViewer, BlobProvider } from "@react-pdf/renderer";
-import { useLocation } from "react-router-dom";
-import Document from "../components/Document";
+import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
+import { getDocumentById, downloadDocumentById } from "../data/api";
+import { useParams } from "react-router-dom";
 const DocumentPage = () => {
-  const location = useLocation();
-  const onDownload = (url) => {
+  const { id } = useParams();
+  const [documentData, setDocumentData] = useState({});
+  useEffect(() => {
+    const fetchDocument = async () => {
+      const response = await getDocumentById(id);
+      const responseData = await response.data;
+      setDocumentData(() => responseData.data);
+    };
+    fetchDocument();
+    console.log(documentData);
+  }, []);
+
+  const onDownload = () => {
     const link = document.createElement("a");
-    link.download = `surat.pdf`;
-    link.href = url;
+    link.href = downloadDocumentById(id);
     link.click();
   };
   return (
     <>
-      <PDFViewer width={"100%"} height={"650px"}>
-        <Document {...location.state} />
-      </PDFViewer>
-      <BlobProvider document={<Document {...location.state} />}>
-        {({ blob, url, loading, error }) => {
-          console.log(url);
-          return (
-            <>
-              <Button
-                sx={{
-                  width: "100%",
-                  padding: "16px 0",
-                  fontWeight: "bold",
-                  marginTop: "16px",
-                }}
-                variant="contained"
-                onClick={() => {
-                  if (!loading) onDownload(url);
-                }}
-                disabled={loading}
-              >
-                Download Surat
-              </Button>
-            </>
-          );
+      {documentData.path ? (
+        <embed src={documentData.path} width="100%" height="750px" />
+      ) : (
+        "Loading preview ..."
+      )}
+      <Button
+        sx={{
+          width: "100%",
+          padding: "16px 0",
+          fontWeight: "bold",
+          marginTop: "16px",
         }}
-      </BlobProvider>
+        variant="contained"
+        onClick={() => {
+          onDownload();
+        }}
+        disabled={!documentData.path}
+      >
+        Download Surat
+      </Button>
     </>
   );
 };

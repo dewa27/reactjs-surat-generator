@@ -1,5 +1,4 @@
 import React from "react";
-import Html from "react-pdf-html";
 import Arial from "./../assets/arial.ttf";
 import ArialBold from "./../assets/arialbd.ttf";
 import ArialItalic from "./../assets/ariali.ttf";
@@ -101,6 +100,9 @@ const styles = StyleSheet.create({
     fontSize: "12pt",
     fontFamily: "Arial",
   },
+  tembusanWrapper: {
+    marginTop: "2cm",
+  },
 });
 
 const stylesheet = {
@@ -117,41 +119,50 @@ const MyDocument = ({
   hal,
   dari,
   tanggal,
-  nomor,
+  nomor_surat,
   isi,
   namaTtd,
   nipTtd,
+  tembusan = "",
 }) => {
   Font.register({ family: "Arial", src: Arial });
   Font.register({ family: "Arial-Bold", src: ArialBold });
   Font.register({ family: "Arial-Italic", src: ArialItalic });
   Font.registerHyphenationCallback((word) => [word]);
-  const text = parse(isi);
-  let html = "";
-  // console.log(text);
-  text.childNodes.forEach((nodes) => {
-    // console.log("node");
-    console.log(nodes.toString());
-    // console.log(nodes.childNodes);
-    html += nodes
-      .toString()
-      .replace(/<p[^>]*><br><\/p[^>]*>/g, "")
-      .replace(
-        /<p[^>]*>/g,
-        "<Text style={{lineHeight:'1.5',textIndent:'1cm',textAlign:'justify'}}>"
-      )
-      .replace(/<\/p[^>]*>/g, "</Text>")
-      .replace(
-        /<strong[^>]*>/g,
-        "<Text style={{fontFamily:'Arial-Bold',textIndent:'1cm'}}>"
-      )
-      .replace(/<\/strong[^>]*>/g, "</Text>")
-      .replace(
-        /<em[^>]*>/g,
-        "<Text style={{fontFamily:'Arial-Italic',textIndent:'1cm'}}>"
-      )
-      .replace(/<\/em[^>]*>/g, "</Text>");
-  });
+
+  const createTextFromHtml = (htmlText, isIndent) => {
+    const text = parse(htmlText);
+    let html = "";
+    text.childNodes.forEach((nodes) => {
+      html += nodes
+        .toString()
+        .replace(/<p[^>]*><br><\/p[^>]*>/g, "")
+        .replace(
+          /<p[^>]*>/g,
+          `<Text style={{lineHeight:'1.5',${
+            isIndent ? "textIndent:'1cm'," : ""
+          }textAlign:'justify'}}>`
+        )
+        .replace(/<\/p[^>]*>/g, "</Text>")
+        .replace(
+          /<strong[^>]*>/g,
+          `<Text style={{fontFamily:'Arial-Bold',${
+            isIndent ? "textIndent:'1cm'" : ""
+          }}}>`
+        )
+        .replace(/<\/strong[^>]*>/g, "</Text>")
+        .replace(
+          /<em[^>]*>/g,
+          `<Text style={{fontFamily:'Arial-Italic',${
+            isIndent ? "textIndent:'1cm'" : ""
+          }}}>`
+        )
+        .replace(/<\/em[^>]*>/g, "</Text>");
+    });
+    return html;
+  };
+  const isiSurat = createTextFromHtml(isi, true);
+  const tembusanSurat = createTextFromHtml(tembusan, false);
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -227,7 +238,7 @@ const MyDocument = ({
               marginBottom: "16pt",
             }}
           >
-            Nomor : {nomor}/ND/K2.TU/DJKA/2023
+            Nomor : {nomor_surat}/ND/K2.TU/DJKA/2023
           </Text>
           <View style={{ padding: "0 1cm" }}>
             <View style={styles.bodySpecWrapper}>
@@ -251,11 +262,15 @@ const MyDocument = ({
               <Text style={styles.bodySpecValue}>{tanggal}</Text>
             </View>
             <View>
-              <JsxParser components={{ Text }} jsx={html} />
+              <JsxParser components={{ Text }} jsx={isiSurat} />
             </View>
             <View style={styles.ttdWrapper}>
               <Text>{namaTtd}</Text>
               <Text style={{ marginTop: "2pt" }}>NIP. {nipTtd}</Text>
+            </View>
+            <View style={styles.tembusanWrapper}>
+              <Text style={{ marginBottom: "8pt" }}>Tembusan :</Text>
+              <JsxParser components={{ Text }} jsx={tembusanSurat} />
             </View>
           </View>
         </View>

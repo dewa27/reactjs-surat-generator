@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   Container,
   Grid,
@@ -11,6 +11,9 @@ import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import DocumentPage from "./DocumentPage";
+import { storeDocument } from "../data/api";
+import Document from "../components/Document";
+import { renderToFile, renderToStream, pdf, usePDF } from "@react-pdf/renderer";
 const toolbarQuill = {
   toolbar: [
     // [{ header: [1, 2, false] }],
@@ -25,36 +28,69 @@ const toolbarQuill = {
     // ["clean"],
   ],
 };
+const formatQuill = ["bold", "italic", "underline", "strike"];
+
 const MainPage = () => {
   const navigate = useNavigate();
-  const [nomor, setNomor] = React.useState("");
-  const [yth, setYth] = React.useState("");
-  const [hal, setHal] = React.useState("");
-  const [tanggal, setTanggal] = React.useState("");
-  const [dari, setDari] = React.useState("");
+  const nomorRef = useRef();
+  const ythRef = useRef();
+  const halRef = useRef();
+  const tanggalRef = useRef();
+  const dariRef = useRef();
+  const isiRef = useRef();
+  const namaTtdRef = useRef();
+  const nipTtdRef = useRef();
   const [isi, setIsi] = React.useState("");
-  const [namaTtd, setNamaTtd] = React.useState("");
-  const [nipTtd, setNipTtd] = React.useState("");
+  const [tembusan, setTembusan] = React.useState("");
 
-  const onExportHandler = () => {
-    navigate("/cetak-surat", {
-      state: { nomor, yth, hal, tanggal, dari, isi, namaTtd, nipTtd },
-    });
+  const generatePdfDocument = async (data) => {
+    const file = new File(
+      [await pdf(<Document {...data} />).toBlob()],
+      "surat.pdf"
+    );
+    return file;
   };
 
-  const onChangeQuill = (value, delta, source, editor) => {
+  const onExportHandler = async () => {
+    const data = {
+      nomor_surat: nomorRef.current.value,
+      yth: ythRef.current.value,
+      dari: dariRef.current.value,
+      hal: halRef.current.value,
+      tanggal: tanggalRef.current.value,
+      nama_ttd: namaTtdRef.current.value,
+      nip_ttd: nipTtdRef.current.value,
+      isi: isi,
+      tembusan: tembusan,
+    };
+
+    try {
+      const file = await generatePdfDocument(data);
+      const response = await storeDocument({
+        ...data,
+        file: file,
+      });
+      const responseData = await response.data;
+      navigate(`/surat/${responseData.data.id}`);
+    } catch (e) {}
+  };
+
+  const onChangeIsiQuill = (value, delta, source, editor) => {
     setIsi(value);
   };
+
+  const onChangeTembusanQuill = (value, delta, source, editor) => {
+    setTembusan(value);
+  };
+
   return (
     <Grid container columnSpacing={2} rowSpacing={2}>
       <Grid item xs={12}>
         <TextField
           id="outlined-controlled"
           label="Nomor Surat"
-          value={nomor}
-          onChange={(event) => {
-            setNomor(event.target.value);
-          }}
+          name="nomor_surat"
+          inputRef={nomorRef}
           sx={{
             width: "100%",
           }}
@@ -64,10 +100,8 @@ const MainPage = () => {
         <TextField
           id="outlined-controlled"
           label="Yang Terhormat (Yth)"
-          value={yth}
-          onChange={(event) => {
-            setYth(event.target.value);
-          }}
+          name="yth"
+          inputRef={ythRef}
           sx={{
             width: "100%",
           }}
@@ -77,10 +111,8 @@ const MainPage = () => {
         <TextField
           id="outlined-controlled"
           label="Dari"
-          value={dari}
-          onChange={(event) => {
-            setDari(event.target.value);
-          }}
+          name="dari"
+          inputRef={dariRef}
           sx={{
             width: "100%",
           }}
@@ -90,10 +122,8 @@ const MainPage = () => {
         <TextField
           id="outlined-controlled"
           label="Hal"
-          value={hal}
-          onChange={(event) => {
-            setHal(event.target.value);
-          }}
+          name="hal"
+          inputRef={halRef}
           sx={{
             width: "100%",
           }}
@@ -103,10 +133,8 @@ const MainPage = () => {
         <TextField
           id="outlined-controlled"
           label="Tanggal"
-          value={tanggal}
-          onChange={(event) => {
-            setTanggal(event.target.value);
-          }}
+          name="tanggal"
+          inputRef={tanggalRef}
           sx={{
             width: "100%",
           }}
@@ -116,10 +144,7 @@ const MainPage = () => {
         <TextField
           id="outlined-controlled"
           label="Nama Penanda Tangan"
-          value={namaTtd}
-          onChange={(event) => {
-            setNamaTtd(event.target.value);
-          }}
+          inputRef={namaTtdRef}
           sx={{
             width: "100%",
           }}
@@ -129,10 +154,8 @@ const MainPage = () => {
         <TextField
           id="outlined-controlled"
           label="NIP Penanda Tangan"
-          value={nipTtd}
-          onChange={(event) => {
-            setNipTtd(event.target.value);
-          }}
+          name="nip_ttd"
+          inputRef={nipTtdRef}
           sx={{
             width: "100%",
           }}
@@ -142,7 +165,16 @@ const MainPage = () => {
         <ReactQuill
           placeholder="Isi Surat"
           modules={toolbarQuill}
-          onChange={onChangeQuill}
+          onChange={onChangeIsiQuill}
+          formats={formatQuill}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <ReactQuill
+          placeholder="Isi Surat"
+          modules={toolbarQuill}
+          formats={formatQuill}
+          onChange={onChangeTembusanQuill}
         />
       </Grid>
       <Grid item xs={12}>
