@@ -76,7 +76,9 @@ const MainPage = () => {
       });
       const responseData = await response.data;
       navigate(`/surat/${responseData.data.id}`);
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const onChangeIsiQuill = (value, delta, source, editor) => {

@@ -60,7 +60,11 @@ const DocumentCard = ({ documentData }) => {
           >
             Download
           </Button>
-          <Button sx={{ padding: "8px 16px" }} startIcon={<FavoriteIcon />}>
+          <Button
+            sx={{ padding: "8px 16px" }}
+            startIcon={<FavoriteIcon />}
+            disabled={documentData.isFavorite == 1 ? true : false}
+          >
             Favorite
           </Button>
         </Box>

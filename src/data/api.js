@@ -1,5 +1,6 @@
 import axios from "axios";
 const baseURL = "https://suratkeretapi.definitelynotgod.com/api";
+// const baseURL = "http://127.0.0.1:8000/api";
 const client = axios.create({
   baseURL: baseURL,
   headers: {
@@ -24,4 +25,13 @@ function downloadDocumentById(id) {
 async function getDocuments() {
   return client.get(`/document`);
 }
-export { storeDocument, getDocumentById, downloadDocumentById, getDocuments };
+async function toggleFavorite(id) {
+  return client.post(`/document/${id}/favorite`);
+}
+export {
+  storeDocument,
+  getDocumentById,
+  downloadDocumentById,
+  getDocuments,
+  toggleFavorite,
+};

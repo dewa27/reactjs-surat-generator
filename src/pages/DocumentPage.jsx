@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
-import { getDocumentById, downloadDocumentById } from "../data/api";
+import {
+  getDocumentById,
+  downloadDocumentById,
+  toggleFavorite,
+} from "../data/api";
 import { useParams } from "react-router-dom";
 const DocumentPage = () => {
   const { id } = useParams();
@@ -9,6 +13,7 @@ const DocumentPage = () => {
     const fetchDocument = async () => {
       const response = await getDocumentById(id);
       const responseData = await response.data;
+      // console.log(responseData.data);
       setDocumentData(() => responseData.data);
     };
     document.title = "Detail Surat";
@@ -19,6 +24,15 @@ const DocumentPage = () => {
     const link = document.createElement("a");
     link.href = downloadDocumentById(id);
     link.click();
+  };
+  const onFavorite = async () => {
+    try {
+      const response = await toggleFavorite(id);
+      const responseData = await response.data;
+      console.log("berhasil menambahkan ke favorite");
+    } catch (e) {
+      console.log(e);
+    }
   };
   return (
     <>
@@ -41,6 +55,23 @@ const DocumentPage = () => {
         disabled={!documentData.path}
       >
         Download Surat
+      </Button>
+      <Button
+        sx={{
+          width: "100%",
+          padding: "16px 0",
+          fontWeight: "bold",
+          marginTop: "16px",
+          backgroundColor: "#FFB6C1",
+        }}
+        variant="contained"
+        onClick={() => {
+          onFavorite();
+        }}
+      >
+        {documentData.isFavorite != 1
+          ? "Tambahkan ke Favorite"
+          : "Hapus dari Favorite"}
       </Button>
     </>
   );

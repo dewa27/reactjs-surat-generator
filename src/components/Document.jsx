@@ -121,8 +121,8 @@ const MyDocument = ({
   tanggal,
   nomor_surat,
   isi,
-  namaTtd,
-  nipTtd,
+  nama_ttd,
+  nip_ttd,
   tembusan = "",
 }) => {
   Font.register({ family: "Arial", src: Arial });
@@ -265,8 +265,8 @@ const MyDocument = ({
               <JsxParser components={{ Text }} jsx={isiSurat} />
             </View>
             <View style={styles.ttdWrapper}>
-              <Text>{namaTtd}</Text>
-              <Text style={{ marginTop: "2pt" }}>NIP. {nipTtd}</Text>
+              <Text>{nama_ttd}</Text>
+              <Text style={{ marginTop: "2pt" }}>NIP. {nip_ttd}</Text>
             </View>
             <View style={styles.tembusanWrapper}>
               <Text style={{ marginBottom: "8pt" }}>Tembusan :</Text>
