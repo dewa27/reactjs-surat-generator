@@ -28,10 +28,14 @@ async function getDocuments() {
 async function toggleFavorite(id) {
   return client.post(`/document/${id}/favorite`);
 }
+async function getFavoriteDocuments() {
+  return client.get(`/document/all/favorite`);
+}
 export {
   storeDocument,
   getDocumentById,
   downloadDocumentById,
   getDocuments,
   toggleFavorite,
+  getFavoriteDocuments,
 };

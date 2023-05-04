@@ -18,6 +18,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import "react-quill/dist/quill.snow.css";
 import { HistoryPage } from "./pages/HistoryPage";
 import { styled } from "@mui/material/styles";
+import FavoritePage from "./pages/FavoritePage";
 
 const BottomNavigationAction = styled(MuiBottomNavigationAction)(`
   &.Mui-selected {
@@ -34,6 +35,8 @@ function App() {
       setNavValue(1);
     } else if (location.pathname === "/") {
       setNavValue(0);
+    } else if (location.pathname === "/favorite") {
+      setNavValue(2);
     }
   }, [location]);
 
@@ -46,6 +49,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/history" element={<HistoryPage />} />
+          <Route path="/favorite" element={<FavoritePage />} />
           <Route path="/surat/:id" element={<DocumentPage />} />
         </Routes>
       </Container>
@@ -79,7 +83,12 @@ function App() {
           component={Link}
           to="/history"
         />
-        <BottomNavigationAction label="Favorit" icon={<FavoriteIcon />} />
+        <BottomNavigationAction
+          label="Favorit"
+          icon={<FavoriteIcon />}
+          component={Link}
+          to="/favorite"
+        />
       </BottomNavigation>
     </>
   );

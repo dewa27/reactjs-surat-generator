@@ -29,6 +29,7 @@ const DocumentPage = () => {
     try {
       const response = await toggleFavorite(id);
       const responseData = await response.data;
+      setDocumentData(responseData.data);
       console.log("berhasil menambahkan ke favorite");
     } catch (e) {
       console.log(e);
@@ -69,9 +70,9 @@ const DocumentPage = () => {
           onFavorite();
         }}
       >
-        {documentData.isFavorite != 1
-          ? "Tambahkan ke Favorite"
-          : "Hapus dari Favorite"}
+        {documentData.isFavorite == 1
+          ? "Hapus dari Favorite"
+          : "Tambahkan ke Favorite"}
       </Button>
     </>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Card,
@@ -10,14 +10,16 @@ import {
   Box,
   Stack,
 } from "@mui/material";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { useNavigate } from "react-router-dom";
-import { downloadDocumentById } from "../data/api";
+import { downloadDocumentById, toggleFavorite } from "../data/api";
 
 const DocumentCard = ({ documentData }) => {
   const navigate = useNavigate();
+  const [isFavorite, setIsFavorite] = useState(documentData.isFavorite);
   const onPreviewClick = () => {
     navigate(`/surat/${documentData.id}`);
   };
@@ -26,6 +28,17 @@ const DocumentCard = ({ documentData }) => {
     link.href = downloadDocumentById(documentData.id);
     link.click();
   };
+  const onFavoriteClick = async () => {
+    try {
+      const response = await toggleFavorite(documentData.id);
+      const responseData = await response.data;
+      setIsFavorite(parseInt(responseData.data.isFavorite));
+      console.log("berhasil menambahkan ke favorite");
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <Card sx={{ width: "100%" }}>
       <CardContent>
@@ -53,20 +66,24 @@ const DocumentCard = ({ documentData }) => {
           Preview
         </Button>
         <Box>
-          <Button
-            sx={{ padding: "8px 16px" }}
+          <IconButton
+            sx={{ width: "48px", height: "48px" }}
             onClick={onDownloadClick}
-            startIcon={<FileDownloadIcon />}
+            color="primary"
           >
-            Download
-          </Button>
-          <Button
-            sx={{ padding: "8px 16px" }}
-            startIcon={<FavoriteIcon />}
-            disabled={documentData.isFavorite == 1 ? true : false}
+            <FileDownloadIcon />
+          </IconButton>
+          <IconButton
+            sx={{ width: "48px", height: "48px" }}
+            onClick={onFavoriteClick}
+            color="primary"
           >
-            Favorite
-          </Button>
+            {isFavorite == 1 ? (
+              <FavoriteOutlinedIcon />
+            ) : (
+              <FavoriteBorderOutlinedIcon />
+            )}
+          </IconButton>
         </Box>
       </CardActions>
     </Card>
