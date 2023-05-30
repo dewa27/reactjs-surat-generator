@@ -41,7 +41,7 @@ const MainPage = () => {
   const namaTtdRef = useRef();
   const nipTtdRef = useRef();
   const [isi, setIsi] = React.useState("");
-  const [tembusan, setTembusan] = React.useState("");
+  // const [tembusan, setTembusan] = React.useState("");
 
   useEffect(() => {
     document.title = "Cetak Surat";
@@ -65,7 +65,7 @@ const MainPage = () => {
       nama_ttd: namaTtdRef.current.value,
       nip_ttd: nipTtdRef.current.value,
       isi: isi,
-      tembusan: tembusan,
+      // tembusan: tembusan,
     };
 
     try {
@@ -85,9 +85,9 @@ const MainPage = () => {
     setIsi(value);
   };
 
-  const onChangeTembusanQuill = (value, delta, source, editor) => {
-    setTembusan(value);
-  };
+  // const onChangeTembusanQuill = (value, delta, source, editor) => {
+  //   setTembusan(value);
+  // };
 
   return (
     <Grid container columnSpacing={2} rowSpacing={2}>
@@ -175,14 +175,14 @@ const MainPage = () => {
           formats={formatQuill}
         />
       </Grid>
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <ReactQuill
           placeholder="Isi Surat"
           modules={toolbarQuill}
           formats={formatQuill}
           onChange={onChangeTembusanQuill}
         />
-      </Grid>
+      </Grid> */}
       <Grid item xs={12}>
         <Button
           sx={{ width: "100%", padding: "16px 0", fontWeight: "bold" }}

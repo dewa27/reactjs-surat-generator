@@ -100,9 +100,9 @@ const styles = StyleSheet.create({
     fontSize: "12pt",
     fontFamily: "Arial",
   },
-  tembusanWrapper: {
-    marginTop: "2cm",
-  },
+  // tembusanWrapper: {
+  //   marginTop: "2cm",
+  // },
 });
 
 const stylesheet = {
@@ -123,7 +123,7 @@ const MyDocument = ({
   isi,
   nama_ttd,
   nip_ttd,
-  tembusan = "",
+  // tembusan = "",
 }) => {
   Font.register({ family: "Arial", src: Arial });
   Font.register({ family: "Arial-Bold", src: ArialBold });
@@ -162,7 +162,7 @@ const MyDocument = ({
     return html;
   };
   const isiSurat = createTextFromHtml(isi, true);
-  const tembusanSurat = createTextFromHtml(tembusan, false);
+  // const tembusanSurat = createTextFromHtml(tembusan, false);
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -268,10 +268,10 @@ const MyDocument = ({
               <Text>{nama_ttd}</Text>
               <Text style={{ marginTop: "2pt" }}>NIP. {nip_ttd}</Text>
             </View>
-            <View style={styles.tembusanWrapper}>
+            {/* <View style={styles.tembusanWrapper}>
               <Text style={{ marginBottom: "8pt" }}>Tembusan :</Text>
               <JsxParser components={{ Text }} jsx={tembusanSurat} />
-            </View>
+            </View> */}
           </View>
         </View>
       </Page>
