@@ -1,6 +1,6 @@
 import axios from "axios";
-const baseURL = "https://suratkeretapi.definitelynotgod.com/api";
-// const baseURL = "http://127.0.0.1:8000/api";
+const baseURL = `${process.env.API_URL}/api`;
+
 const client = axios.create({
   baseURL: baseURL,
   headers: {
